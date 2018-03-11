@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Tali's Watering Hole</title>
+    <link rel="stylesheet" href="C:\wamp64\www\wampthemes\simple\style.css">
+    <style>
+        img { height:100% }
+        a {
+            color: #C0C0EF;
+        }
+        body{
+            font-family: "Arial", Arial, Sans-Serif;
+            color: #DDDDDD;
+            background-color: #303030;
+        }
+    </style>
+
+
+    <script type="text/javascript"> 
+    //#336699
+        var h; //handcuffs
+        var c; //cum
+
+        if(!s) h = 0;
+        if(!c) c = 0;
+
+
+        function init(){
+            //les mettre aux états des checkbox, ou mettre les checkbox à 0
+        }
+
+        function setSuitTo(_suit){
+            s = _suit;
+            update();
+        }
+        function setCumTo(_cum){
+            c = _cum;
+            update();
+        }
+        function setBoolean(_id){
+            if(_id='handcuffs') h = document.getElementById(_id).checked ? 1 : 0;
+            if(_id='cum') c = document.getElementById(_id).checked ? 1 : 0;
+            update();
+        }
+
+        function update(){
+            filename="images/TWH_h"+h+"c"+c+".jpg";
+            //document.getElementById("handcuffs").checked= h? true : false;
+            //document.getElementById("cum").checked= c? true : false;
+            document.getElementById("img").src=filename;
+            document.getElementById("code").innerHTML="Code : s"+s+"p"+p+"c"+c+"t"+t;
+        }
+        window.onload = init;
+    </script>
+
+</head>
+<body>
+
+    <div style="float:right; width:70%;">
+            <img id="img" src="images/TWH_h0c0.jpg">
+    </div>
+
+
+
+    <div style="float:left; width:30%; ;">
+    <form id="form" method="post">
+        <table>
+            <tr>
+                <td>Handcuffs &nbsp</td>
+                <td>
+                    <input type="hidden"   name="handcuffs" value="0" >
+                    <input type="checkbox" name="handcuffs" id="handcuffs" onchange="setBoolean('handcuffs')" value="1">
+                </td>
+            </tr>
+            <tr>
+                <td>Cum</td>
+                <td> 
+                    <input type="hidden"   name="cum" value="0" >
+                    <input type="checkbox" name="cum" id="cum" onchange="setBoolean('cum')" value="1" >
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <br>
+    Quarien Prisoner <a href="https://flapsnu.github.io/Quarian/page.html">(Back)</a><br>
+    Art by <a href="http://www.hentai-foundry.com/user/Throat/profile">Throat</a>
+    </div>
+
+<script>
+
+</script>
+</body>
+</html>

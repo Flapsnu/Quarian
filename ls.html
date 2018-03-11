@@ -1,0 +1,165 @@
+<html>
+<head>
+    <title>Quarian Love Slave</title>
+    <link rel="stylesheet" href="C:\wamp64\www\wampthemes\simple\style.css">
+    <style>
+        img { height:100% }
+        a {
+            color: #C0C0EF;
+        }
+        body{
+            font-family: "Arial", Arial, Sans-Serif;
+            color: #DDDDDD;
+            background-color: #303030;
+        }
+    </style>
+
+
+    <script type="text/javascript"> 
+    //#336699
+        var s; //suit(top)
+        var p; //panties
+
+        if(!s) s = 2;
+        if(!p) p = 1;
+
+
+        function init(){
+            //les mettre aux états des checkbox, ou mettre les checkbox à 0
+        }
+
+        function setSuitTo(_suit){
+            s = _suit;
+            update();
+        }
+        function setPantiesTo(_p){
+            p = _p;
+            update();
+        }
+
+        function fullSuit(_suit){
+            if(_suit){
+                p=1;s=1;
+            }
+            else {
+                p=0;s=0;
+            }
+            update();
+        }
+
+        function nextTop(){
+            if(s < 2) s++;
+            else {
+                s = 0;
+            }
+
+            update();
+        }
+        function prevTop(){
+            if(s>0) s--;
+            else {
+                s = 2;
+            }
+            update();
+        }
+
+        function nextBottom(){
+            if(p < 2) p++;
+            else {
+                p = 0;
+            }
+
+            update();
+        }
+        function prevBottom(){
+            if(p>0) p--;
+            else {
+                p = 2;
+            }
+            update();
+        }
+
+        function setTied(){
+            document.getElementById("s0").checked = true;
+            p=0;
+            s=3;
+            update();
+        }
+
+        /*
+        function setBoolean(_id){
+            if(_id='') h = document.getElementById(_id).checked ? 1 : 0;
+            update();
+        }
+        */
+
+        function update(){
+            if(s==3 && p!=0) s=0;
+            filename="images/ls/s"+s+"p"+p+".jpg";
+            if(s!=3)
+                document.getElementById("s"+s).checked = true;
+            document.getElementById("p"+p).checked = true;
+            document.getElementById("img").src=filename;
+            //document.getElementById("code").innerHTML="Code : s"+s+"p"+p;
+        }
+        window.onload = update;
+    </script>
+
+</head>
+<body>
+
+    <div style="float:right; width:70%;">
+            <img id="img" src="images/ls/s2p1.jpg">
+    </div>
+
+
+
+    <div style="float:left; width:30%; ;">
+    <form id="form" method="post">
+        <table>
+            <tr><td>Top</td></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="suit" id="s0" value="0" onchange="setSuitTo(0)">Nude 
+                    <input type="radio" name="suit" id="s1" value="1" onchange="setSuitTo(1)">Bra
+                    <input type="radio" name="suit" id="s2" value="2" onchange="setSuitTo(2)">Full Suit
+                </td>
+                <td>
+                    <input type="button" onclick="prevTop()" value="<">
+                    <input type="button" onclick="nextTop()" value=">">
+                </td>
+            </tr>
+            <tr><td>Bottom</td></tr>
+            <tr>
+                <td> 
+                    <input type="radio" name="panties" id="p0" value="0" onchange="setPantiesTo(0)">Nude 
+                    <input type="radio" name="panties" id="p1" value="1" onchange="setPantiesTo(1)">Panties
+                    <input type="radio" name="panties" id="p2" value="2" onchange="setPantiesTo(2)">Cum &nbsp
+                </td>
+                <td>
+                    <input type="button" onclick="prevBottom()" value="<">
+                    <input type="button" onclick="nextBottom()" value=">">
+                </td>
+            </tr>
+            <tr><td>Presets</td></tr>
+            <tr>
+                <td>
+                    <input type="button" onclick="fullSuit(0)" value="Nude">
+                    <input type="button" onclick="fullSuit(1)" value="Lingerie">
+                    <input type="button" id="settied" onclick="setTied()" value="Tied">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <br>
+    Quarian Prisoner <a href="https://flapsnu.github.io/Quarian/page.html">(Back)</a><br>
+    Art by <a href="http://www.hentai-foundry.com/user/Throat/profile">Throat</a><br><br>
+    <a href="https://github.com/Flapsnu/Quarian">Github page</a> for the project (with more info and news)
+    </div>
+
+<script>
+
+</script>
+</body>
+</html>

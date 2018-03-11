@@ -1,0 +1,244 @@
+<html>
+<head>
+    <title>Quarian Prisoner</title>
+    <link rel="stylesheet" href="C:\wamp64\www\wampthemes\simple\style.css">
+    <style>
+        img { height:100% }
+        
+        a {
+            color: #C0C0EF;
+        }
+        body{
+            font-family: "Arial", Arial, Sans-Serif;
+            color: #DDDDDD;
+            background-color: #303030;
+        }
+    </style>
+
+
+    <script type="text/javascript"> 
+        var s; //suit
+        var p; //preg
+        var c; //cum level
+        var t;   //tags
+        var pl;  //pregloop
+        var plo;  //preglooponce
+
+        if(!s) s = 0;
+        if(!p) p = 0;
+        if(!c) c = 0;
+        if(!t) t = 0;
+        if(!pl) pl = 0;
+        if(!plo) plo = 0;
+
+        function init(){
+            //optional stuff to do here, I don't remember
+        }
+
+        function setSuitTo(_suit){
+            s = _suit;
+            update();
+        }
+        function setCumTo(_cum){
+            c = _cum;
+            update();
+        }
+        function setBoolean(_id){
+            if(_id='preg')  document.getElementById('preg').checked ? p=1 : p=0;
+            if(_id='tags') t = document.getElementById('tags').checked ? 1 : 0;
+            if(_id='pregloop') pl = document.getElementById('pregloop').checked ? 1 : 0;
+            if(_id='preglooponce') plo = document.getElementById('preglooponce').checked ? 1 : 0;
+            console.log("p t pl plo:"+p+t+pl+plo);
+            update();
+        }
+
+        //checks the next/previous cum level and submits
+        function more(){
+            if(c < 3) c++;
+            else {
+                c = 0;
+                if(pl) {
+                    p = 1-p; //si p=1 -> p=0; si p=0 -> p=1
+                    if(plo) {
+                        pl=0;
+                        plo=0;
+                    }
+                    update();
+                    
+                }
+                else {
+                    rollPreg();
+                }
+            }
+
+            update();
+        }
+        function less(){
+            if(c>0) c--;
+            else {
+                c = 3;
+                if(pl) p = 1-p;
+            }
+            update();
+        }
+
+        function rollPreg(){
+            chance=document.getElementById("chance").value;
+            if(!chance) chance=0;
+            roll = Math.floor((Math.random()*100)+1); //between 1 and 100
+            console.log("roll: "+roll+" // chance: "+chance);
+            if(roll<=chance){
+                console.log("Fertilized! >:)");
+                p=1;
+            }
+            else console.log("failed :(");
+            update();
+        }
+        function fixChance(){
+            chance=document.getElementById("chance").value;
+            if(!chance || chance<0) chance=0;
+            else if(chance>100) chance=100;
+            document.getElementById("chance").value=chance;
+        }
+
+        function showStoryMode(){
+            var checked=document.getElementById("showstory").checked;
+            console.log(checked);
+            /*
+            if (document.getElementById("advanced").style.display=='none') document.getElementById("advanced").style.display='block';
+            else document.getElementById("advanced").style.display='none';
+            */
+            document.getElementById("storymodeform").style.display= checked ? 'block' : 'none';
+            document.getElementById("storymodeform").selectedIndex = 0;
+        }
+
+        function startStory(_story){
+            console.log(_story);
+            if(_story=="capture" || _story=="capture_endless") {
+                s=1;p=0;c=0;t=0;pl=1;
+                update();
+            }
+
+        }
+
+        function next(_story){
+            console.log(_story);
+            var code=""+s+p+c+t;
+            console.log("code: "+code);
+            if(code=="1130"){
+                if(_story=="capture" || _story=="capture_endless"){
+                    s=0;pl=1;
+                }
+            }
+            if(code=="0030"){
+                if(_story=="capture" || _story=="capture_endless"){
+                    t=1;pl=1;
+                }
+            }
+            if(code=="0131"){
+                if(_story=="capture" || _story=="capture_endless"){
+                    s=2;pl=1;
+                }
+            }
+            if(code=="2131"){
+                if(_story=="capture"){
+                    s=1;t=0;pl=1;
+                }
+            }
+            
+            more();
+            var code=""+s+p+c+t;
+            console.log("code après: "+code);
+        }
+
+        function previous(_story){
+
+        }
+
+        function update(){
+            fixChance();
+            if(plo&&!pl) pl=1;
+            filename="images/s"+s+"p"+p+"c"+c+"t"+t+".jpg";
+            document.getElementById("c"+c).checked = true;
+            document.getElementById("s"+s).checked = true;
+            document.getElementById("preg").checked= p? true : false;
+            document.getElementById("tags").checked= t? true : false;
+            document.getElementById("pregloop").checked= pl? true : false;
+            document.getElementById("preglooponce").checked= plo? true : false;
+            document.getElementById("img").src=filename;
+            document.getElementById("code").innerHTML="Code : s"+s+"p"+p+"c"+c+"t"+t;
+        }
+        window.onload = init;
+    </script>
+
+</head>
+<body>
+    
+    <div style="float:right; width:70%;">
+            <img id="img" src="images/s0p0c0t0.jpg">
+    </div>
+
+    <div style="float:left; width:30%;">
+    <form id="form" method="post">
+        Suit :<br>
+        <input type="radio" name="suit" id="s0" value="1" onchange="setSuitTo(0)">Nude 
+        <input type="radio" name="suit" id="s1" value="2" onchange="setSuitTo(1)">Armor 
+        <input type="radio" name="suit" id="s2" value="3" onchange="setSuitTo(2)">Condoms<br>
+
+        Cum level : <br>
+        <input type="radio" name="cum" id="c0" onchange="setCumTo(0)" value="0">Clean
+        <input type="radio" name="cum" id="c1" onchange="setCumTo(1)" value="1">Light
+        <input type="radio" name="cum" id="c2" onchange="setCumTo(2)" value="2">Medium 
+        <input type="radio" name="cum" id="c3" onchange="setCumTo(3)" value="3">Heavy
+        <input type="button" name="cum" onclick="less()" value="-">
+        <input type="button" name="cum" onclick="more()" value="+">
+        <br>
+
+
+        
+        Other :
+        <input type="checkbox" id="preg" onchange="setBoolean('preg')">Preg 
+        <input type="checkbox" id="tags" onchange="setBoolean('tags')">Tags<br><br>
+    
+
+        <input type="checkbox" id="pregloop" name="pregloop" onchange="setBoolean('pregloop')" value="1" '.$plchecked.'>Loop preg with cum
+        <input type="checkbox" id="preglooponce" name="preglooponce" onchange="setBoolean('preglooponce')" value="1" '.$plchecked.'>Once<br><br>
+
+        <div id="pregChance">Pregnancy Chance :<br>
+                <input type="number" id="chance" step="1" min="0" max="100" value="0" style="text-align:right;width: 4em">%
+                <br><br>
+        </div>
+
+        <span id="code">Code : s0p0c0t0</span><br><br>
+
+        <!-- <input type="checkbox" id="showstory" onchange="showStoryMode()">Story Mode<br> -->
+
+        <div id="storymodeform" style="display: none;">
+            <select id="story" onchange="startStory(this.value);">
+                <option value=""></option>
+                <option value="capture">Capture</option>
+                <option value="capture_endless">Capture (Endless)</option>                    
+            </select>
+            <input type="button" name="reset_story" onclick="startStory(story.value)" value="Reset">
+            <!-- <input type="button" name="prev_story" onclick="less()" value="<"> -->
+            <input type="button" name="next_story" onclick="next(story.value)" value="Advance >">
+            <br>
+        </div>
+        </form>
+        <br><br><br>
+
+    Other pages:<br><br>
+    D.Va Enslaved (<a href="https://flapsnu.github.io/Quarian/dva.html">1</a> &
+    <a href="https://flapsnu.github.io/Quarian/dva_2.html">2</a>)<br>
+    
+    Quarian Love Slave <a href="https://flapsnu.github.io/Quarian/ls.html">(Bonus)</a><br>
+    Tali's Watering Hole <a href="https://flapsnu.github.io/Quarian/twh.html">(Bonus)</a><br>
+    Art by <a href="http://www.hentai-foundry.com/user/Throat/profile">Throat</a><br><br>
+    <a href="https://github.com/Flapsnu/Quarian">Github page</a> for the project (with more info and news)
+ 
+    </div>
+    
+    
+
+</body>
+</html>

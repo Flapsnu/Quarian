@@ -1,0 +1,167 @@
+<html>
+<head>
+    <title>D.Va Enslaved</title>
+    <link rel="stylesheet" href="C:\wamp64\www\wampthemes\simple\style.css">
+    <style>
+        img { height:100% }
+        a {
+            color: #C0C0EF;
+        }
+        body{
+            font-family: "Arial", Arial, Sans-Serif;
+            color: #DDDDDD;
+            background-color: #303030;
+        }
+    </style>
+
+
+    <script type="text/javascript"> 
+    //#336699
+        var suit;
+        var face;
+        var gag;
+        var dudes;   //dicks/dudes
+        var cum;
+
+        if(!suit) suit = 2;  //012
+        if(!face) face = 2;  //012
+        if(!gag) gag = 1;    //bool
+        if(!dudes) dudes = 0;//bool
+        if(!cum) cum = 0;    //bool
+
+        function init(){
+            //les mettre aux états des checkbox, ou mettre les checkbox à 0
+        }
+
+        function setSuitTo(_suit){
+            suit = _suit;
+            update();
+        }
+        function setFaceTo(_face){
+            face = _face;
+            update();
+        }
+        function setBoolean(_id){
+            console.log(_id);
+            if(_id='gag')  gag = document.getElementById('gag').checked ? 1 : 0;
+            if(_id='dudes') dudes = document.getElementById('dudes').checked ? 1 : 0;
+            if(_id='cum') cum = document.getElementById('cum').checked ? 1 : 0;
+            //console.log("p t pl:"+p+t+pl);
+            update();
+        }
+
+        function nextSuit(){
+            if(suit < 2) suit++;
+            else {
+                suit = 0;
+            }
+
+            update();
+        }
+        function prevSuit(){
+            if(suit>0) suit--;
+            else {
+                suit = 2;
+            }
+            update();
+        }
+
+        function nextFace(){
+            if(face < 2) face++;
+            else {
+                face = 0;
+            }
+
+            update();
+        }
+        function prevFace(){
+            if(face>0) face--;
+            else {
+                face = 2;
+            }
+            update();
+        }
+
+        function takeTurns(){
+            temp=dudes;
+            dudes=1-cum;
+            cum=temp;
+            update();
+        }
+
+        function update(){
+            filename="images/dva/s"+suit+"f"+face+"g"+gag+"d"+dudes+"c"+cum+".jpg";
+            document.getElementById("f"+face).checked = true;
+            document.getElementById("s"+suit).checked = true;
+            document.getElementById("gag").checked= gag? true : false;
+            document.getElementById("dudes").checked= dudes? true : false;
+            document.getElementById("cum").checked= cum? true : false;
+            document.getElementById("img").src=filename;
+            document.getElementById("code").innerHTML="Code : s"+suit+"f"+face+"g"+gag+"d"+dudes+"c"+cum;
+
+        }
+        window.onload = init;
+    </script>
+
+</head>
+<body>
+
+    <div style="float:right; width:65%;">
+            <img id="img" src="images/dva/s2f2g1d0c0.jpg">
+    </div>
+
+    <div style="float:left; width:35%;">
+    <form id="form" method="post">
+        <table>
+        <tr><td>Suit :</td></tr>
+        <tr>
+            <td>
+        <input type="radio" name="suit" id="s0" value="0" onchange="setSuitTo(0)">Nude 
+        <input type="radio" name="suit" id="s1" value="1" onchange="setSuitTo(1)">Suit (no shoes) 
+        <input type="radio" name="suit" id="s2" value="2" onchange="setSuitTo(2)">Suit (shoes)
+            </td>
+            <td>
+        <input type="button" onclick="prevSuit()" value="<">
+        <input type="button" onclick="nextSuit()" value=">">
+            </td>
+        </tr>
+
+
+        <tr><td>Face :</td></tr>
+        <tr>
+            <td>
+                <input type="radio" name="cum" id="f0" onchange="setFaceTo(0)" value="0">Calm
+                <input type="radio" name="cum" id="f1" onchange="setFaceTo(1)" value="1">Angry
+                <input type="radio" name="cum" id="f2" onchange="setFaceTo(2)" value="2">Blindfold
+            </td>
+            <td>
+                <input type="button" onclick="prevFace()" value="<">
+                <input type="button" onclick="nextFace()" value=">">
+            </td>
+        </tr>
+
+        <tr><td>Other :</td></tr>
+        <tr>
+            <td>
+                <input type="checkbox" name="dudes" id="dudes" onchange="setBoolean('dudes')" value="1">Dudes
+                <input type="checkbox" name="cum" id="cum" onchange="setBoolean('cum')" value="1" >Cum
+                <input type="checkbox" name="gag" id="gag" onchange="setBoolean('gag')" value="1">Mouth Gag
+            </td>
+            <td>
+                <input type="button" onclick="takeTurns()" value="Take Turns">
+            </td>
+        </table>
+
+        <span id="code">Code : s0f0g0d0c0</span>
+    </form>
+
+        <br>
+        Other pages:<br><br>
+        <a href="https://flapsnu.github.io/Quarian/dva_2.html">DVa Enslaved 2</a><br>
+        <a href="https://flapsnu.github.io/Quarian/page.html">Quarian Prisoner</a><br>
+        Art by <a href="http://www.hentai-foundry.com/user/Throat/profile">Throat</a><br><br>
+        <a href="https://github.com/Flapsnu/Quarian">Github page</a> for the project (with more info and news)
+    </div>
+
+</body>
+</html>

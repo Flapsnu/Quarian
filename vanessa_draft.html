@@ -1,0 +1,636 @@
+<html>
+<head>
+    <title>Vanessa draft</title>
+    <link rel="stylesheet" href="stylesheets\layers_style.css">
+    <style>
+        img { height:100% }
+        a {
+            color: #C0C0EF;
+        }
+        body{
+            font-family: "Arial", Arial, Sans-Serif;
+            color: #DDDDDD;
+            background-color: #303030;
+            /*background-color: #292337;*/
+            /*background-color: #1c1627;*/
+        }
+    </style>
+
+
+    <script type="text/javascript"> 
+    //#336699
+        var suit;
+        var face;
+        var guys;   //dicks/dudes
+        var back_guy;
+        var bga;    //back guy arms
+        var front_guy;
+        var fga;    //front guy arms
+        var mouth;
+        var cum;
+        var blindfold;
+        var sweat;
+        var writing;
+
+        var onlyFF;
+        var onlyDT;
+        var special;
+        var CmA; //cumming makes ahegao
+        var aCS; //auto Cock-shocked
+        var messy;
+        var noClean; //don't clean cum after taking turns
+        var cleanSuit //cleans when changing outfit
+
+        if(!suit) suit = 0;  //012
+        if(!face) face = 2;  //012
+        if(!guys) guys = 0;  //bool
+        if(!back_guy) back_guy = 0; //0123;
+        if(!bga) bga=1;     //bool
+        if(!front_guy) front_guy = 0; //01234
+        if(!fga) fga=1;     //bool
+        if(!mouth) mouth = 0;       //0123
+        if(!cum) cum = 0;   //bool
+        if(!blindfold) blindfold=0;
+        if(!sweat) sweat=0;
+        if(!writing) writing=0;
+
+        if(!onlyFF) onlyFF=0;
+        if(!onlyDT) onlyDT=0;
+        if(!special) special=0;
+        if(!aCS) aCS = 1;
+        if(!CmA) CmA = 1;
+        if(!noClean) noClean=0;
+        if(!messy) messy=1;
+        if(!cleanSuit) cleanSuit=0;
+
+        var maxSuits = 2; //indice, donc 3 suits = 0-2
+        var maxFaces = 2;
+        var prefferedFace = 0; //0=Surprised, 2=angry
+
+        console.log("this happens");
+
+        //preload
+        preloads = "back_guy_arms,back_guy1,back_guy2,back_guy3,face_0,face_1,face_2,facec_1,facec_2,facec_3,front_guy_arms,front_guy1,front_guy2,front_guy3,front_guy4".split(",");
+        var tempImg = [];
+
+        for(var x=0;x<preloads.length;x++) {
+            tempImg[x] = new Image();
+            tempImg[x].src = "images/VM_project/layers/"+preloads[x]+".png";
+            //console.log("Loaded "+preloads[x]);
+        }
+        update();
+
+        function setSuitTo(_suit){
+            suit = _suit;
+            suit_filename = "images/VM_project/layers/suit_"+suit+".png";
+            document.getElementById('suit_layer').src=suit_filename;
+            update();
+            if(cleanSuit)
+                clean();
+        }
+        function setFaceTo(_face){
+                face = _face;
+                face_filename = "images/VM_project/layers/face_"+face+".png";
+                document.getElementById('face_layer').src=face_filename;
+                updatePrefFace();
+                update();
+            }
+        function updatePrefFace(){
+                if(face != 1)
+                    prefferedFace = face;
+            }
+        function setMouthTo(_mouth){
+            mouth = _mouth;
+            mouth_filename = "images/VM_project/layers/mouth_"+mouth+".png";
+            document.getElementById('mouth_layer').src=mouth_filename;
+            if(cum){
+                var facecum;
+                if (mouth==0)
+                    facecum=1;
+                else
+                    facecum=mouth;
+                facec_filename = "images/VM_project/layers/facec_"+facecum+".png"
+                document.getElementById("facecum_layer").src=facec_filename;
+            }
+            if(front_guy && (mouth==2 || mouth==3))
+                setFrontGuyTo(0);
+            update();
+        }
+
+        function setBackGuyTo(_back_guy){
+            back_guy = _back_guy;
+            if(back_guy!=0){
+                document.getElementById("bg_layer").style.display = 'block';
+                back_guy_filename = "images/VM_project/layers/back_guy"+back_guy+".png";
+                document.getElementById('bg_layer').src=back_guy_filename;
+                if(bga)
+                    document.getElementById('backArms_layer').style.display = 'block';
+            }
+            else{
+                document.getElementById('bg_layer').style.display = 'none';
+                document.getElementById('backArms_layer').style.display = 'none';
+            }
+            update();
+        }
+
+        function setFrontGuyTo(_front_guy){
+            front_guy = _front_guy;
+            if(front_guy!=0){
+                document.getElementById("fg_layer").style.display = 'block';
+                front_guy_filename = "images/VM_project/layers/front_guy"+front_guy+".png";
+                document.getElementById('fg_layer').src=front_guy_filename;
+                if(fga)
+                    document.getElementById('frontArms_layer').style.display = 'block';
+                if(mouth==2)
+                    setMouthTo(1);      //avoiding tape/gag + front guy "collision"
+                else if (mouth==3)
+                    setMouthTo(0);
+            }
+            else{
+                document.getElementById('fg_layer').style.display = 'none';
+                document.getElementById('frontArms_layer').style.display = 'none';
+            }
+            update();
+        }
+
+        function setBoolean(_id){
+                console.log("switching value of "+_id);
+                if(_id=='cum') cum = document.getElementById('cum').checked ? 1 : 0;
+                toggleCumLayer();
+                if(_id=='bga') bga = document.getElementById('bga').checked ? 1 : 0;
+                toggleBgaLayer();
+                if(_id=='fga') fga = document.getElementById('fga').checked ? 1 : 0;
+                toggleFgaLayer();
+                if(_id=='blindfold') blindfold = document.getElementById('blindfold').checked ? 1 : 0;
+                toggleBlindfoldLayer();
+                if(_id=='sweat') sweat = document.getElementById('sweat').checked ? 1 : 0;
+                toggleSweatLayer();
+                if(_id=='writing') writing = document.getElementById('writing').checked ? 1 : 0;
+                toggleWritingLayer();
+                if(_id=='onlyFF') {
+                    onlyFF = document.getElementById('onlyFF').checked ? 1 : 0;
+                    if(onlyFF && (onlyDT || special)){
+                        onlyDT=0;
+                        special=0;
+                    }
+                }
+                if(_id=='onlyDT') {
+                    onlyDT = document.getElementById('onlyDT').checked ? 1 : 0;
+                    if(onlyDT && (onlyFF || special)){
+                        onlyFF=0;
+                        special=0;
+                    }
+                }
+                if(_id=='special'){
+                    special = document.getElementById('special').checked ? 1 : 0;
+                    if(special && (onlyDT || onlyFF)){
+                        onlyFF=0;
+                        onlyDT=0;
+                    }
+                }
+                if(_id=='CmA') CmA = document.getElementById('CmA').checked ? 1 : 0;
+                if(_id=='aCS') aCS = document.getElementById('aCS').checked ? 1 : 0;
+                if(_id=='noClean') noClean = document.getElementById('noClean').checked ? 1 : 0;
+                if(_id=='messy') messy = document.getElementById('messy').checked ? 1 : 0;
+                if(_id=='cleanSuit') cleanSuit = document.getElementById('cleanSuit').checked ? 1 : 0;
+                //console.log("p t pl:"+p+t+pl);
+                update();
+            }
+
+        function nextSuit(){
+            if(suit < maxSuits) suit++;
+            else {
+                suit = 0;
+            }
+            setSuitTo(suit);
+            if(cleanSuit)
+                clean();
+        }
+        function prevSuit(){
+            if(suit>0) suit--;
+            else {
+                suit = maxSuits;
+            }
+            setSuitTo(suit);
+            if(cleanSuit)
+                clean();
+        }
+
+        function nextFace(){
+            if(face < maxFaces) face++;
+            else {
+                face = 0;
+            }
+            setFaceTo(face);           
+        }
+        function prevFace(){
+            if(face>0) face--;
+            else {
+                face = maxFaces;
+            }
+            setFaceTo(face);
+        }
+
+        function nextMouth(){
+            if(mouth < 3) mouth++;
+            else {
+                mouth = 0;
+            }
+            setMouthTo(mouth);           
+        }
+        function prevMouth(){
+            if(mouth>0) mouth--;
+            else {
+                mouth = 3;
+            }
+            setMouthTo(mouth);
+        }
+
+        function nextBg(){
+            if(back_guy < 3) back_guy++;
+            else {
+                back_guy = 0;
+            }
+            setBackGuyTo(back_guy);
+            if(back_guy==1 && aCS)
+                setFaceTo(0);
+            if(back_guy==0 && aCS)
+                setFaceTo(2);
+            if(back_guy==2 && CmA)
+                setFaceTo(1);        
+        }
+        function prevBg(){
+            if(back_guy>0) back_guy--;
+            else {
+                back_guy = 3;
+            }
+            setBackGuyTo(back_guy);
+            if(back_guy==2)
+                setFaceTo(1);
+        }
+
+        function nextFg(){
+            if(!special){
+                if(front_guy < 4) front_guy++;
+                else {
+                    front_guy = 0;
+                }
+                if(onlyFF && (front_guy > 2)){
+                    front_guy = 0;
+                }
+                else if(onlyDT && (front_guy==1 || front_guy==2)){
+                    front_guy = 3;
+                }
+            }
+            else{
+                switch(front_guy){
+                    case 0:
+                        front_guy=1;
+                        setFaceTo(0);
+                        break;
+                    case 1:
+                        front_guy=4;
+                        setFaceTo(1);
+                        break;
+                    case 3:
+                        front_guy=4;
+                        if(CmA) setFaceTo(1);
+                        break;
+                    case 4:
+                        front_guy=2;
+                        break;
+                    case 2:
+                        front_guy=0;
+                        setFaceTo(2);
+                        break
+                }
+            }
+            setFrontGuyTo(front_guy);
+            if(!special){
+                if((front_guy==1 || front_guy==3) && aCS)
+                    setFaceTo(0);
+                if(front_guy==0 && aCS)
+                    setFaceTo(2);
+                if((front_guy==2 || front_guy==4) && CmA)
+                    setFaceTo(1);      
+            }
+            if(front_guy==0 && messy){
+                        console.log("ici");
+                        cum=1;
+                        toggleCumLayer();
+                        update();
+            }
+        }
+        function prevFg(){
+            if(front_guy>0) front_guy--;
+            else {
+                front_guy = 4;
+            }
+            if(onlyFF && (front_guy > 2)){
+                front_guy = 2;
+            }
+            else if(onlyDT && (front_guy==1 || front_guy==2)){
+                front_guy = 0;
+            }
+            setFrontGuyTo(front_guy);
+        }
+
+        function clean(){
+            setBackGuyTo(0);
+            setFrontGuyTo(0);
+            setFaceTo(2);
+            cum=0;
+            toggleCumLayer();
+            sweat=0;
+            toggleSweatLayer();
+            writing=0;
+            toggleWritingLayer();
+            update();
+            blindfold=0;
+            toggleBlindfoldLayer();
+        }
+
+        function takeTurns(){
+            special=1;
+            update();
+            nextFg();
+            nextBg();
+            if(front_guy==0 || back_guy == 0){
+                setFrontGuyTo(0);
+                setBackGuyTo(0);
+            }
+        }
+
+        function contLoads(){
+            special=1;
+            if(front_guy!=2 || back_guy != 3){
+                takeTurns();
+            }
+            else{
+                setFrontGuyTo(4);
+                setBackGuyTo(2);
+                //face ?
+                roll= Math.floor((Math.random()*100)+1);
+                if(roll<30){
+                    cum=1;
+                    toggleCumLayer();
+                }
+                roll = Math.floor((Math.random()*100)+1);
+                if(roll<75)
+                    setFaceTo(1);
+                else if (roll<95)
+                    setFaceTo(0);
+                else 
+                    setFaceTo(2);
+            }
+
+        }
+
+        function toggleCumLayer(){
+            if(cum)
+                document.getElementById('facecum_layer').style.display = 'block';
+            else
+                document.getElementById('facecum_layer').style.display = 'none';
+        }
+        function toggleBgaLayer(){
+            if(bga && back_guy)
+                document.getElementById('backArms_layer').style.display = 'block';
+            else
+                document.getElementById('backArms_layer').style.display = 'none';
+        }
+        function toggleFgaLayer(){
+            if(fga && front_guy)
+                document.getElementById('frontArms_layer').style.display = 'block';
+            else
+                document.getElementById('frontArms_layer').style.display = 'none';
+        }
+        function toggleBlindfoldLayer(){
+            if(blindfold)
+                document.getElementById('blindfold_layer').style.display = 'block';
+            else
+                document.getElementById('blindfold_layer').style.display = 'none';
+        }
+        function toggleSweatLayer(){
+            if(sweat)
+                document.getElementById('sweat_layer').style.display = 'block';
+            else
+                document.getElementById('sweat_layer').style.display = 'none';
+        }
+        function toggleWritingLayer(){
+            if(writing)
+                document.getElementById('writing_layer').style.display = 'block';
+            else
+                document.getElementById('writing_layer').style.display = 'none';
+        }
+
+        function update(){
+            /*
+            if(cum==2)
+                if(guys==0){
+                    cum=1;
+                    console.log("avoided the impossible: s"+suit+"f"+face+"g"+guys+"c2.png");
+                }
+                */
+            //filename="images/VM_project/mockup/s"+suit+"f"+face+"g"+guys+"c"+cum+".png";
+            document.getElementById("f"+face).checked = true;
+            document.getElementById("s"+suit).checked = true;
+            document.getElementById("m"+mouth).checked = true;
+            document.getElementById("bg"+back_guy).checked = true;
+            document.getElementById("fg"+front_guy).checked = true;
+            document.getElementById("onlyFF").checked= onlyFF? true : false;
+            document.getElementById("onlyDT").checked= onlyDT? true : false;
+            document.getElementById("special").checked= special? true : false;
+            document.getElementById("cum").checked= cum? true : false;
+            document.getElementById("blindfold").checked= blindfold? true : false;
+            document.getElementById("sweat").checked= sweat? true : false;
+            document.getElementById("writing").checked= writing? true : false;
+            document.getElementById("bga").checked= bga? true : false;
+            document.getElementById("CmA").checked= CmA? true : false;
+            document.getElementById("aCS").checked= aCS? true : false;
+            //document.getElementById("noClean").checked= noClean? true : false;
+            document.getElementById("messy").checked= messy? true : false;
+            document.getElementById("cleanSuit").checked= cleanSuit? true : false;
+            //document.getElementById("img").src=filename;
+            //document.getElementById("code").innerHTML="Code : s"+suit+"f"+face+"g"+guys+"c"+cum;
+        }
+    </script>
+
+</head>
+<body>
+
+    <div>
+    	<div style="float:right; width:60%;" class="wrapper">
+            <img id="img" src="images/VM_project/layers/minimal_alt.png" class="under">
+            <img id="bg_layer" src="images/VM_project/layers/back_guy.png" class="layer1" style="display : none;">
+            <img id="sweat_layer" src="images/VM_project/layers/sweat.png" class="layer5">
+            <img id="face_layer" src="images/VM_project/layers/face_2.png" class="layer6">
+            <img id="mouth_layer" src="images/VM_project/layers/mouth_0.png" class="layer7">      <!-- Don't touch this one-->
+            <img id="suit_layer" src="images/VM_project/layers/suit_0.png" class="layer13">
+            <img id="blindfold_layer" src="images/VM_project/layers/blindfold.png" class="layer14" style="display : none;">
+            <img id="facecum_layer" src="images/VM_project/layers/facec_1.png" class="layer15" style="display : none;">
+            <img id="writing_layer" src="images/VM_project/layers/writing.png" class="layer16" style="display : none;">
+            <img id="backArms_layer" src="images/VM_project/layers/back_guy_arms.png" class="layer18" style="display : none;">
+
+            <img id="frontArms_layer" src="images/VM_project/layers/front_guy_arms.png" class="layer19" style="display : none;">
+            <img id="fg_layer" src="images/VM_project/layers/front_guy1.png" class="layer20" style="display : none;">
+        </div>
+    </div>
+
+        <div style="float:left; width:40%;">
+        <form id="form" method="post">
+            <table>
+            <tr><td>Suit :</td></tr>
+            <tr>
+                <td>
+            <input type="radio" name="suit" id="s0" value="0" onchange="setSuitTo(0)">Nude 
+            <input type="radio" name="suit" id="s1" value="1" onchange="setSuitTo(1)">Dress
+            <input type="radio" name="suit" id="s2" value="2" onchange="setSuitTo(2)">Catsuit
+                </td>
+                <td>
+            <input type="button" onclick="prevSuit()" value="<">
+            <input type="button" onclick="nextSuit()" value=">">
+                </td>
+            </tr>
+
+
+            <tr><td>Expression :</td></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="face" id="f2" onchange="setFaceTo(2)">Pissed
+                    <input type="radio" name="face" id="f0" onchange="setFaceTo(0)">"Cock-shocked"
+                    <input type="radio" name="face" id="f1" onchange="setFaceTo(1)">Ahegao
+                </td>
+                <td>
+                    <input type="button" onclick="prevFace()" value="<">
+                    <input type="button" onclick="nextFace()" value=">">
+                </td>
+            </tr>
+
+            <tr><td>Mouth :</td></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="mouth" id="m0" onchange="setMouthTo(0)">None
+                    <input type="radio" name="mouth" id="m1" onchange="setMouthTo(1)">Ring Gag
+                    <input type="radio" name="mouth" id="m2" onchange="setMouthTo(2)">Ball Gag
+                    <input type="radio" name="mouth" id="m3" onchange="setMouthTo(3)">Tape
+                </td>
+                <td>
+                    <input type="button" onclick="prevMouth()" value="<">
+                    <input type="button" onclick="nextMouth()" value=">">
+                </td>
+            </tr>
+
+            <tr><td>Front Man :</td></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="front_guy" id="fg0" onchange="setFrontGuyTo(0)">None
+                    <input type="radio" name="front_guy" id="fg1" onchange="setFrontGuyTo(1)">Facefuck
+                    <input type="radio" name="front_guy" id="fg2" onchange="setFrontGuyTo(2)">FF cum
+                </td>
+                <td>
+                    <input type="button" onclick="prevFg()" value="<">
+                    <input type="button" onclick="nextFg()" value=">">
+                </td>
+            <tr>
+                <td>
+                    <input type="radio" name="front_guy" id="fg3" onchange="setFrontGuyTo(3)">Deepthroat
+                    <input type="radio" name="front_guy" id="fg4" onchange="setFrontGuyTo(4)">DT cum
+                </td>
+            </tr>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="fga" id="fga" onchange="setBoolean('fga')" value="1" >Show arms
+                </td>
+            </tr>
+
+            <tr><td>Back Man :</td></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="back_guy" id="bg0" onchange="setBackGuyTo(0)">None
+                    <input type="radio" name="back_guy" id="bg1" onchange="setBackGuyTo(1)">Assfuck
+                    <input type="radio" name="back_guy" id="bg2" onchange="setBackGuyTo(2)">Cum Blast
+                    <input type="radio" name="back_guy" id="bg3" onchange="setBackGuyTo(3)">Cum
+                </td>
+                <td>
+                    <input type="button" onclick="prevBg()" value="<">
+                    <input type="button" onclick="nextBg()" value=">">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="bga" id="bga" onchange="setBoolean('bga')" value="1" >Show arms
+                </td>
+            </tr>
+
+            <tr><td>Other :</td></tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="cum" id="cum" onchange="setBoolean('cum')" value="1" >Facial Cum
+                    <input type="checkbox" name="blindfold" id="blindfold" onchange="setBoolean('blindfold')" value="1" >Blindfold
+                    
+                </td>
+                <td>
+                    <input type="button" onclick="takeTurns()" value="Take Turns">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="sweat" id="sweat" onchange="setBoolean('sweat')" value="1" >Sweat
+                    <input type="checkbox" name="writing" id="writing" onchange="setBoolean('writing')" value="1" >Body Writing
+                </td>
+                <td>
+                    <input type="button" onclick="contLoads()" value="Endless Loads">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" onclick="clean()" value="Reset">
+                </td>
+            </tr>
+
+            <tr><td>Options :</td></tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="onlyFF" id="onlyFF" onchange="setBoolean('onlyFF')" value="1">Only Facefuck
+                    <input type="checkbox" name="onlyDT" id="onlyDT" onchange="setBoolean('onlyDT')" value="1">Only Deepthroat
+                    <input type="checkbox" name="special" id="special" onchange="setBoolean('special')" value="1">Special
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="CmA" id="CmA" onchange="setBoolean('CmA')" value="1">Cumming makes Ahegao
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="aCS" id="aCS" onchange="setBoolean('aCS')" value="1">Auto Cock-shock/Pissed
+                </td>
+            </tr>
+            
+             <tr>
+                <td>
+                    <!-- <input type="checkbox" name="noClean" id="noClean" onchange="setBoolean('noClean')" value="1" >Don't clean cum -->
+                    <input type="checkbox" name="messy" id="messy" onchange="setBoolean('messy')" value="1" >Messy Facefuck
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="checkbox" name="cleanSuit" id="cleanSuit" onchange="setBoolean('cleanSuit')" value="1" >Reset when changing outfits
+                </td>
+            </tr>
+            
+            </table>
+
+        <br>
+        <span id="code">Code : s0f0g0c0</span>
+        </form>
+
+        Other pages like this <a href="https://flapsnu.github.io/Quarian/page.html">(Go)</a><br>
+        Art by <a href="https://www.hentai-foundry.com/user/aka6/profile">Aka6</a>
+    </div>
+
+
+</body>
+</html>
